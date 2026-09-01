@@ -28,7 +28,7 @@ jobs:
       run: docker compose up -d postgres --wait
 
     - name: Test
-      run: go test -v main_test.go 
+      run: go test -v ./...
 
   build:
     needs: test
