@@ -1,4 +1,5 @@
-module github.com/guilhermeonrails/api-go-gin
+module github.com/ViniciusSilvestre10/Projeto_Go-CI2
+
 
 go 1.17
 
