@@ -9,16 +9,12 @@ services:
     ports:
       - "5432:5432"
     volumes:
-<<<<<<< HEAD
-      - /postgres-data:/var/lib/postgresql/data  
-=======
       - postgres-data:/var/lib/postgresql/data 
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U root -d root"]
       interval: 2s
       timeout: 5s
       retries: 10
->>>>>>> 6eeb98f6a68e30563c9ab9fd373e4c18d158ae56
 
   pgadmin-compose:
     image: dpage/pgadmin4
@@ -28,13 +24,8 @@ services:
     ports:
       - "54321:80"
     depends_on:
-<<<<<<< HEAD
-      - postgres
-
-=======
       postgres:
         condition: service_healthy
 
 volumes:
   postgres-data:
->>>>>>> 6eeb98f6a68e30563c9ab9fd373e4c18d158ae56
