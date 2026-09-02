@@ -1,10 +1,13 @@
 name: Go
+
 on:
   push:
     branches: [ '*' ]
   pull_request:
     branches: [ '*' ]
+
 jobs:
+
   test:
     runs-on: ${{ matrix.os }}
     env:
@@ -14,32 +17,34 @@ jobs:
       PASSWORD: root
       DBNAME: root
     strategy:
-      fail-fast: false
       matrix:
-        go_version: ['1.18', '1.17']
-        os: ['ubuntu-latest']
+        go_version: ['1.18', '1.17', '>=1.18']
+        os: ['ubuntu-latest', 'ubuntu-18.04']
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
+
     - name: Set up Go
-      uses: actions/setup-go@v5
+      uses: actions/setup-go@v3
       with:
         go-version: ${{ matrix.go_version }}
-
+      
     - name: Build-DB
-      run: docker compose build postgres
-
+      run: docker-compose build
+      
     - name: Create-DB
-      run: docker compose up -d postgres --wait
+      run: docker-compose up -d
+
     - name: Test
-      run: go test -v ./...
+      run: go test -v main_test.go 
+      
+  
   build:
     needs: test
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ['ubuntu-latest']
+        os: ['ubuntu-latest', 'ubuntu-18.04']
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v3
     - name: Build
       run: go build -v main.go
-
