@@ -1,43 +1,39 @@
 name: Go
-
 on:
   push:
-    branches: [ Aula_1 ]
+    branches: [ '*' ]
   pull_request:
-    branches: [ Aula_1 ]
-
+    branches: [ '*' ]
 jobs:
-
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
-        go_version: ['1.18', '1.17', '>=1.18']
+        go_version: ['1.18', '1.17']
+        os: ['ubuntu-latest']
     steps:
-    - uses: actions/checkout@v3
-
+    - uses: actions/checkout@v4
     - name: Set up Go
-      uses: actions/setup-go@v3
+      uses: actions/setup-go@v5
       with:
         go-version: ${{ matrix.go_version }}
-      
-    - name: Build-DB
-      run: docker-compose build
-      
-    - name: Create-DB
-      run: docker-compose up -d
 
+    - name: Build-DB
+      run: docker compose build postgres
+
+    - name: Create-DB
+      run: docker compose up -d postgres --wait
     - name: Test
-      run: go test -v main_test.go 
-      
-  
+      run: go test -v ./...
   build:
     needs: test
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: ['ubuntu-latest', 'ubuntu-18.04']
+        os: ['ubuntu-latest']
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Build
       run: go build -v main.go
+
